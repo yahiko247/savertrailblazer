@@ -112,8 +112,6 @@ export default function ProfilePage() {
     }
   };
 
-  
-
   useEffect(() => {
     client.get(
       `/api/getuserproducts/${String(user.id)}`
@@ -130,15 +128,6 @@ export default function ProfilePage() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  const handleImageOpen = () => {
-    <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={handleImageChange}
-            />
-  }
 
   return (
     <Box sx={{ display: 'flex' }}>

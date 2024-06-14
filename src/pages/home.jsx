@@ -38,6 +38,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import { AuthContext } from '../contextprovider/AuthContext';
+import AddBoxTwoToneIcon from '@mui/icons-material/AddBoxTwoTone';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -110,6 +111,7 @@ export default function Home() {
   const [productDescription, setProductDescription] = useState('');
   const [imageURL, setImageURL] = useState(null);
   const [image, setImage] = useState(null);
+  const [openErrorDialog, setOpenErrorDialog] = useState(false);
   const {setPosts} = useContext(PostContext);
   const {user} = useContext(AuthContext);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -151,11 +153,16 @@ export default function Home() {
           }
         });
     }catch(error){
-      console.error("Error Creating Post:", error)
+      console.error("Error Creating Post:", error);
+      setOpenErrorDialog(true);
     }finally{
       getProducts();
       setOpenPostDialog(false);
     }
+  }
+
+  const handleCloseErrorDialog =(e) => {
+    setOpenErrorDialog(false);
   }
 
   const handleImageChange = (e) => {
@@ -315,7 +322,7 @@ export default function Home() {
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={handleOpenPostDialog}>
-                <MailIcon/>
+                <AddBoxTwoToneIcon/>
               </IconButton>
               <IconButton
                 size="large"
@@ -495,6 +502,28 @@ export default function Home() {
             </Button>
             <Button onClick={sendPost} autoFocus>
               Post
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Fragment>
+      <Fragment>
+        <Dialog
+          fullScreen={fullScreen}
+          open={openErrorDialog}
+          onClose={handleCloseErrorDialog}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">
+            {"Bad Request"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Must Include all fields
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleCloseErrorDialog}>
+              OK
             </Button>
           </DialogActions>
         </Dialog>
