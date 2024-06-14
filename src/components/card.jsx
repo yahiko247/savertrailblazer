@@ -14,6 +14,21 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import axios from 'axios'
+import { PostContext } from '../contextprovider/PostContext';
+import {useContext} from 'react'
+
+
+
+//localhost
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.withCredentials = true;
+
+const client = axios.create({
+baseURL: "http://127.0.0.1:8000"
+});
+
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -28,6 +43,9 @@ const ExpandMore = styled((props) => {
 
 export default function RecipeReviewCard() {
   const [expanded, setExpanded] = React.useState(false);
+  const {posts} = useContext(PostContext);
+
+
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
