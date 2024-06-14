@@ -27,6 +27,18 @@ import { UserPostContext } from '../contextprovider/UserPostContext';
 import { Button } from '@mui/material';
 import axios from 'axios';
 
+
+const ImgResponsive = styled('img')(({ theme }) => ({
+    height: 'auto',
+    width: '300px', /* Default width */
+    marginTop: '450px', /* Default margin */
+    [theme.breakpoints.down('sm')]: {
+        width: '200px',
+        marginTop: '30px'
+    },
+}));
+
+
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
@@ -129,69 +141,68 @@ export default function ProfilePage() {
   }
 
   return (
-    <>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="fixed" open={open} style={{background:'rgb(45, 92, 222)'}}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{ mr: 2, ...(open && { display: 'none' }) } }
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-            Profile
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          sx={{
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar position="fixed" open={open} style={{background:'rgb(45, 92, 222)'}}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{ mr: 2, ...(open && { display: 'none' }) } }
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+           Profile
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
             width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-            },
-          }}
-          variant="persistent"
-          anchor="left"
-          open={open}
-        >
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List  >
-            {['Home', 'Shop', 'Add to cart', 'Favorites'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <Link to={`/${text === 'Home' ? 'home' : text === 'Shop' ? 'shop': text === 'Add to cart' ? 'add' :text.toLowerCase()}`} style={{textDecoration: 'none', color:'black'}}>
-                <ListItemButton>
-                  <ListItemIcon style={{color:'black'}}>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-                </Link>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-        <Main open={open}>
-          <DrawerHeader />
+            boxSizing: 'border-box',
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={open}
+      >
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List  >
+          {['Home', 'Shop', 'Add to cart', 'Favorites'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <Link to={`/${text === 'Home' ? 'home' : text === 'Shop' ? 'shop': text === 'Add to cart' ? 'add' :text.toLowerCase()}`} style={{textDecoration: 'none', color:'black'}}>
+              <ListItemButton>
+                <ListItemIcon style={{color:'black'}}>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+              </Link>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+      <Main open={open}>
+        <DrawerHeader />
           <Box className="col w-100" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <Box sx={{ textAlign: 'center' }}>
-                  <div className="row" style={{ color: 'black',  padding:'20px', borderRadius:'10px', position:'absolute',marginTop:'450px'}}>
-                      <img src={img1} alt='' style={{height:'auto', width:'300px'}}/>
-                      <p style={{marginTop:'-100px', marginLeft:'50px',color:'white', fontSize:'30px'}}>{user.username}</p>
-                  </div> 
-                  <div style={{ color: 'black', height:'auto', width:'auto', borderRadius:'50px'}}>
-                      <img src={img2} alt="" style={{height:'auto', width:'100%' }}/>
+              <Box sx={{ textAlign: 'center' }}>
+                  <div className="row" style={{ color: 'black', padding: '20px', borderRadius: '10px', position: 'absolute' }}>
+                      <ImgResponsive src={img1} alt='' />
+                      <p style={{ marginTop: '-100px', marginLeft: '50px', color: 'white', fontSize: '30px' }}>{user.username}</p>
+                  </div>
+                  <div style={{ color: 'black', height: 'auto', width: 'auto', borderRadius: '50px' }}>
+                      <img src={img2} alt="" style={{ height: 'auto', width: '100%' }} />
                       <hr className="divider" />
                   </div>
               </Box>
@@ -199,9 +210,14 @@ export default function ProfilePage() {
                   <RecipeReviewCard />
               </Box>
           </Box>
-        </Main>
-      </Box>
-    </>
-    
+      </Main>
+    </Box>
   );
+
+
+
+
 }
+
+
+
