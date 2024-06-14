@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState,useContext} from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -14,9 +14,10 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios'
-import { PostContext } from '../contextprovider/PostContext';
-import {useContext} from 'react'
+import { UserPostContext } from '../contextprovider/UserPostContext';
 
 
 
@@ -42,8 +43,10 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function RecipeReviewCard() {
-  const [expanded, setExpanded] = React.useState(false);
-  const {posts} = useContext(PostContext);
+  const [expanded, setExpanded] = useState(false);
+  const {userPosts} = useContext(UserPostContext);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
 
 
@@ -51,10 +54,20 @@ export default function RecipeReviewCard() {
     setExpanded(!expanded);
   };
 
+  const handleVertClose = () => {
+    setAnchorEl(null);
+    setSelectedPost(null);
+  };
+
+  const handleVertClick = (e, post) => {
+    setAnchorEl(e.currentTarget);
+    setSelectedPost(post)
+  };
+
   return (
     <>
-    {posts.length > 0 ?
-      (posts.map( post =>(
+    {userPosts.length > 0 ?
+      (userPosts.map( post =>(
         <Card sx={{ width: '19rem', margin:'20px' }}>
           <CardHeader
             avatar={
@@ -64,7 +77,7 @@ export default function RecipeReviewCard() {
               src={`${client.defaults.baseURL}/media/${post.author_profile}`}/>
             }
             action={
-              <IconButton aria-label="settings">
+              <IconButton aria-label="settings" onClick={(e) => handleVertClick(e, post)}>
                 <MoreVertIcon />
               </IconButton>
             }
@@ -91,6 +104,14 @@ export default function RecipeReviewCard() {
       ))) : (
         <Typography>No Posted Products Yet</Typography>
       )} 
+    <Menu
+    anchorEl={anchorEl}
+    open={Boolean(anchorEl)}
+    onClose={handleVertClose}
+    >
+        {/* onClick={() => {handleVertClose(); deletePost(selectedPost.id)}} */}
+        <MenuItem>Delete Post</MenuItem>
+    </Menu>
     </>
   );
 }

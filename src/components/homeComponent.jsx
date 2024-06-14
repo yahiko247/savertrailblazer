@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -73,7 +73,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function Home() {
     //drawer
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  
+
+  
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -83,65 +86,70 @@ export default function Home() {
     setOpen(false);
   };
 
+  
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open} style={{background:'rgb(45, 92, 222)'}}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) } }
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-           DASHBOARD
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open} style={{background:'rgb(45, 92, 222)'}}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: 'none' }) } }
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+            DASHBOARD
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List  >
-          {['Profile', 'Shop', 'Add to cart', 'Favorites'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <Link to={`/${text === 'Profile' ? 'profile' : text === 'Shop' ? 'shop': text === 'Add to cart' ? 'add' :text.toLowerCase()}`} style={{textDecoration: 'none', color:'black'}}>
-              <ListItemButton>
-                <ListItemIcon style={{color:'black'}}>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
-        <Box>
-           <RecipeReviewCard/>
-        </Box>
-      </Main>
-    </Box>
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List  >
+            {['Profile', 'Shop', 'Add to cart', 'Favorites'].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <Link to={`/${text === 'Profile' ? 'profile' : text === 'Shop' ? 'shop': text === 'Add to cart' ? 'add' :text.toLowerCase()}`} style={{textDecoration: 'none', color:'black'}}>
+                <ListItemButton>
+                  <ListItemIcon style={{color:'black'}}>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+                </Link>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <Main open={open}>  
+          <DrawerHeader />
+          <Box>
+            <RecipeReviewCard/>
+          </Box>
+        </Main>
+      </Box>
+    </>
+    
   );
 }

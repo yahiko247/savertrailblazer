@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState, useContext, useEffect} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -18,10 +18,21 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import RecipeReviewCard from '../components/card';
+import RecipeReviewCard from '../components/usercard';
 import { Link } from 'react-router-dom';
 import img1 from '../image/avatar.png'
 import img2 from '../image/bg.jpg'
+import { AuthContext } from '../contextprovider/AuthContext';
+import { UserPostContext } from '../contextprovider/UserPostContext';
+import axios from 'axios';
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.withCredentials = true;
+
+const client = axios.create({
+baseURL: "http://127.0.0.1:8000"
+});
 
 //drawer settings
 const drawerWidth = 240;
@@ -74,7 +85,18 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function ProfilePage() {
     //drawer
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const {user} = useContext(AuthContext);
+  const {setUserPosts} = useContext(UserPostContext);
+
+  useEffect(() => {
+    client.get(
+      `/api/getuserproducts/${String(user.id)}`
+      ).then (function(res){
+          const data = res.data
+          setUserPosts(data)
+      })
+  },[setUserPosts, user.id]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -143,7 +165,7 @@ export default function ProfilePage() {
             <Box sx={{ textAlign: 'center' }}>
                 <div className="row" style={{ color: 'black',  padding:'20px', borderRadius:'10px', position:'absolute',marginTop:'450px'}}>
                     <img src={img1} alt='' style={{height:'auto', width:'300px'}}/>
-                    <p style={{marginTop:'-100px', marginLeft:'50px',color:'white', fontSize:'30px'}}>Vincent M. Gamayon</p>
+                    <p style={{marginTop:'-100px', marginLeft:'50px',color:'white', fontSize:'30px'}}>{user.username}</p>
                     
                 </div> 
                  <div style={{ color: 'black', height:'auto', width:'auto', borderRadius:'50px'}}>
@@ -152,9 +174,6 @@ export default function ProfilePage() {
                 </div>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: '5px' }}>
-                <RecipeReviewCard />
-                <RecipeReviewCard />
-                <RecipeReviewCard />
                 <RecipeReviewCard />
             </Box>
         </Box>
