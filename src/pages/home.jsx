@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState, useContext, useEffect} from 'react';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -28,6 +28,16 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { Link } from 'react-router-dom';
 import img1 from '../image/logo.png'
+import { PostContext } from '../contextprovider/PostContext';
+import axios from 'axios';
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.withCredentials = true;
+
+const client = axios.create({
+baseURL: "http://127.0.0.1:8000"
+});
 
 const drawerWidth = 240;
 
@@ -82,9 +92,18 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function Home() {
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+  const {setPosts} = useContext(PostContext);
+
+  useEffect(()=>{
+    client.get('/api/getproduct').
+    then(function(res){
+      const data = res.data
+      setPosts(data);
+    })
+  },[setPosts]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -303,9 +322,6 @@ export default function Home() {
         <div style={{margin:'30px'}}>
           <DrawerHeader />
           <div style={{display: 'flex', flexDirection:'row',flexWrap: 'wrap', gap: '5px', justifyContent:'center' }}>
-            <RecipeReviewCard />
-            <RecipeReviewCard />
-            <RecipeReviewCard />
             <RecipeReviewCard />
           </div>
         </div>
