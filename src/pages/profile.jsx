@@ -24,6 +24,7 @@ import img1 from '../image/avatar.png'
 import img2 from '../image/bg.jpg'
 import { AuthContext } from '../contextprovider/AuthContext';
 import { UserPostContext } from '../contextprovider/UserPostContext';
+import { Button } from '@mui/material';
 import axios from 'axios';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -88,6 +89,18 @@ export default function ProfilePage() {
   const [open, setOpen] = useState(false);
   const {user} = useContext(AuthContext);
   const {setUserPosts} = useContext(UserPostContext);
+  const [image, setImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageURLt = URL.createObjectURL(file);
+      setImageURL(imageURLt);
+      setImage(file);
+    }
+  };
+
+  
 
   useEffect(() => {
     client.get(
@@ -106,78 +119,89 @@ export default function ProfilePage() {
     setOpen(false);
   };
 
+  const handleImageOpen = () => {
+    <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleImageChange}
+            />
+  }
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open} style={{background:'rgb(45, 92, 222)'}}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) } }
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-           Profile
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open} style={{background:'rgb(45, 92, 222)'}}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: 'none' }) } }
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+            Profile
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List  >
-          {['Home', 'Shop', 'Add to cart', 'Favorites'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <Link to={`/${text === 'Home' ? 'home' : text === 'Shop' ? 'shop': text === 'Add to cart' ? 'add' :text.toLowerCase()}`} style={{textDecoration: 'none', color:'black'}}>
-              <ListItemButton>
-                <ListItemIcon style={{color:'black'}}>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={open}>
-         <DrawerHeader />
-        <Box className="col w-100" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List  >
+            {['Home', 'Shop', 'Add to cart', 'Favorites'].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <Link to={`/${text === 'Home' ? 'home' : text === 'Shop' ? 'shop': text === 'Add to cart' ? 'add' :text.toLowerCase()}`} style={{textDecoration: 'none', color:'black'}}>
+                <ListItemButton>
+                  <ListItemIcon style={{color:'black'}}>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+                </Link>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <Main open={open}>
+          <DrawerHeader />
+          <Box className="col w-100" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ textAlign: 'center' }}>
-                <div className="row" style={{ color: 'black',  padding:'20px', borderRadius:'10px', position:'absolute',marginTop:'450px'}}>
-                    <img src={img1} alt='' style={{height:'auto', width:'300px'}}/>
-                    <p style={{marginTop:'-100px', marginLeft:'50px',color:'white', fontSize:'30px'}}>{user.username}</p>
-                    
-                </div> 
-                 <div style={{ color: 'black', height:'auto', width:'auto', borderRadius:'50px'}}>
-                    <img src={img2} alt="" style={{height:'auto', width:'100%' }}/>
-                    <hr className="divider" />
-                </div>
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: '5px' }}>
-                <RecipeReviewCard />
-            </Box>
-        </Box>
-      </Main>
-    </Box>
+                  <div className="row" style={{ color: 'black',  padding:'20px', borderRadius:'10px', position:'absolute',marginTop:'450px'}}>
+                      <img src={img1} alt='' style={{height:'auto', width:'300px'}}/>
+                      <p style={{marginTop:'-100px', marginLeft:'50px',color:'white', fontSize:'30px'}}>{user.username}</p>
+                  </div> 
+                  <div style={{ color: 'black', height:'auto', width:'auto', borderRadius:'50px'}}>
+                      <img src={img2} alt="" style={{height:'auto', width:'100%' }}/>
+                      <hr className="divider" />
+                  </div>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: '5px' }}>
+                  <RecipeReviewCard />
+              </Box>
+          </Box>
+        </Main>
+      </Box>
+    </>
+    
   );
 }

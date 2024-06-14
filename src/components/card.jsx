@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -16,7 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import axios from 'axios'
 import { PostContext } from '../contextprovider/PostContext';
-import {useContext} from 'react'
+import {useContext} from 'react';
 
 
 
@@ -42,8 +42,10 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function RecipeReviewCard() {
+  const theme = useTheme();
   const [expanded, setExpanded] = React.useState(false);
   const {posts} = useContext(PostContext);
+
 
 
 

@@ -37,6 +37,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
+import { AuthContext } from '../contextprovider/AuthContext';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -110,6 +111,7 @@ export default function Home() {
   const [imageURL, setImageURL] = useState(null);
   const [image, setImage] = useState(null);
   const {setPosts} = useContext(PostContext);
+  const {user} = useContext(AuthContext);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(()=>{
@@ -120,8 +122,40 @@ export default function Home() {
     })
   },[setPosts]);
 
-  const sendPost= async() => {
-    console.log("asdasd")
+  const getProducts = async(e) => {
+    client.get('/api/getproduct').
+    then(function(res){
+      const data = res.data
+      setPosts(data);
+    })
+  }
+
+  const sendPost = async(e) => {
+    e.preventDefault();
+    try{
+      const formData = new FormData();
+      const fullPrice = `${productPrice}.${productDecimal}`
+      formData.append('user', user.id);
+      formData.append('name', productName);
+      formData.append('description', productDescription);
+      formData.append('price', fullPrice);
+      if (image instanceof File) {
+        formData.append('image', image)
+      }
+      const response = await client.post(
+        "/api/postproduct",
+        formData,
+        {
+          headers:{
+            'Content-Type':'multipart/form-data',
+          }
+        });
+    }catch(error){
+      console.error("Error Creating Post:", error)
+    }finally{
+      getProducts();
+      setOpenPostDialog(false);
+    }
   }
 
   const handleImageChange = (e) => {
@@ -393,7 +427,9 @@ export default function Home() {
             />
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <TextField
+                  inputProps={{maxLength : 6}}
                   value={productPrice}
+                  helperText={`${productPrice.length}/6 digits`}
                   id="outlined-multiline-static"
                   label="Price"
                   variant="outlined"
@@ -403,7 +439,9 @@ export default function Home() {
                 />
                 <span style={{ margin: '0 0.5rem' }}>.</span>
                 <TextField
+                  inputProps={{maxLength:2}}
                   value={productDecimal}
+                  helperText={`${productDecimal.length}/2 digits`}
                   id="outlined-multiline-static"
                   variant="outlined"
                   margin="normal"

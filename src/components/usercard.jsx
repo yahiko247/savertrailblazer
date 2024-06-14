@@ -1,5 +1,5 @@
-import {useState,useContext} from 'react';
-import { styled } from '@mui/material/styles';
+import {useState,useContext,Fragment} from 'react';
+import { styled, useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -16,8 +16,15 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios'
 import { UserPostContext } from '../contextprovider/UserPostContext';
+import { Button } from '@mui/material';
 
 
 
@@ -43,12 +50,64 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function RecipeReviewCard() {
+  const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
   const {userPosts} = useContext(UserPostContext);
   const [selectedPost, setSelectedPost] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [openDelDialog, setOpenDelDialog] = useState(false);
+//   const [imageURL, setImageURL] = useState(`${user.profilepic}`)
+  
 
+  
+  
+//   const updateProfilePicture = async(e) => {
+//     e.preventDefault()
+//     try{
+//         const formData = new FormData();
+//         if (image instanceof File){
+//             formData.append('profilepic',image)
+//         }
+//           const response = await client.put(
+//             `/api/updateusername/${String(user.id)}`,
+//             formData,
+//             {
+//               headers:{
+//                 'Content-Type' : 'multipart/form-data',
+//               }
+//         });
+//     }catch(error){
+//         console.error('failed to update Error:',error)
+//     }
 
+//   }
+  
+
+  const deleteProduct = async(postId) => {
+    const token = localStorage.getItem('authToken');
+  
+    try{
+      const response = await client.delete(`/api/deleteproduct/${String(postId)}`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
+      if(response.status === 200){
+        
+      }
+    }catch (error) {
+    console.error("Error deleting post:",error)
+    }
+  };
+
+  const handleClose = () => {
+    setOpenDelDialog(false);
+  }
+
+  const handleOpenDelDialog = () => {
+    setOpenDelDialog(true);
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -64,6 +123,11 @@ export default function RecipeReviewCard() {
     setSelectedPost(post)
   };
 
+  const handleSoldButtonClick = () => {
+    handleClose();
+    deleteProduct(selectedPost.id);
+  }
+
   return (
     <>
     {userPosts.length > 0 ?
@@ -71,11 +135,12 @@ export default function RecipeReviewCard() {
         <Card sx={{ width: '19rem', margin:'20px' }}>
           <CardHeader
             avatar={
-              <Avatar 
-              sx={{ bgcolor: red[500] }} 
-              aria-label="recipe" 
-              src={`${client.defaults.baseURL}/media/${post.author_profile}`}/>
+                <Avatar 
+                sx={{ bgcolor: red[500] }} 
+                aria-label="recipe" 
+                src={`${client.defaults.baseURL}/media/${post.author_profile}`}/>
             }
+              
             action={
               <IconButton aria-label="settings" onClick={(e) => handleVertClick(e, post)}>
                 <MoreVertIcon />
@@ -109,9 +174,35 @@ export default function RecipeReviewCard() {
     open={Boolean(anchorEl)}
     onClose={handleVertClose}
     >
-        {/* onClick={() => {handleVertClose(); deletePost(selectedPost.id)}} */}
-        <MenuItem>Delete Post</MenuItem>
+        
+        <MenuItem onClick={() => {handleOpenDelDialog(); }}>Delete Post</MenuItem>
     </Menu>
+
+    <Fragment>
+        <Dialog
+            fullScreen={fullScreen}
+            open={openDelDialog}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle id="responsive-dialog-title">
+            {"Mark as Sold"}
+            </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        If you mark this product as sold this would delete it and neither you nor other people would be able to see it anymore.
+                    </DialogContentText>
+                </DialogContent>
+            <DialogActions>
+            <Button autoFocus onClick={handleClose}>
+                Cancel
+            </Button>
+            <Button autoFocus onClick={handleSoldButtonClick}>
+                Sold
+            </Button>
+            </DialogActions>
+        </Dialog>
+    </Fragment>
     </>
   );
 }
