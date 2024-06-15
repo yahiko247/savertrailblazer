@@ -391,23 +391,26 @@ export default function Home() {
               variant="outlined"
               onChange={e => setProductName(e.target.value)}
             />
-            <TextField
-              value={productPrice}
-              fullWidth
-              id="outlined-multiline-static"
-              label="Price"
-              variant="outlined"
-              margin="normal"
-              onChange={e => setProductPrice(e.target.value)}
-            />
-            <TextField
-              value={productDecimal}
-              fullWidth
-              id="outlined-multiline-static"
-              variant="outlined"
-              margin="normal"
-              onChange={e => setProductDecimal(e.target.value)}
-            />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <TextField
+                  value={productPrice}
+                  id="outlined-multiline-static"
+                  label="Price"
+                  variant="outlined"
+                  margin="normal"
+                  onChange={e => setProductPrice(e.target.value)}
+                  style={{ flex: 1 }}
+                />
+                <span style={{ margin: '0 0.5rem' }}>.</span>
+                <TextField
+                  value={productDecimal}
+                  id="outlined-multiline-static"
+                  variant="outlined"
+                  margin="normal"
+                  onChange={e => setProductDecimal(e.target.value)}
+                  style={{ flex: 1 }}
+                />
+              </div>
             <TextField
               value={productDescription}
               fullWidth
