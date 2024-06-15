@@ -394,6 +394,7 @@ export default function Home() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <TextField
                   value={productPrice}
+                  type="number"
                   id="outlined-multiline-static"
                   label="Price"
                   variant="outlined"
@@ -404,6 +405,7 @@ export default function Home() {
                 <span style={{ margin: '0 0.5rem' }}>.</span>
                 <TextField
                   value={productDecimal}
+                  type="number"
                   id="outlined-multiline-static"
                   variant="outlined"
                   margin="normal"

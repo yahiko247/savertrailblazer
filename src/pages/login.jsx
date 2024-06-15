@@ -19,6 +19,7 @@ function LoginPage() {
  const [password, setPassword] = useState('');
  const navigate = useNavigate();
  const {setUser} = useContext(AuthContext);
+ const [error, setError] = useState('');
 
   const handleLogin = async(e) => {
     e.preventDefault();

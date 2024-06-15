@@ -26,6 +26,18 @@ import { AuthContext } from '../contextprovider/AuthContext';
 import { UserPostContext } from '../contextprovider/UserPostContext';
 import axios from 'axios';
 
+
+const ImgResponsive = styled('img')(({ theme }) => ({
+    height: 'auto',
+    width: '300px', /* Default width */
+    marginTop: '450px', /* Default margin */
+    [theme.breakpoints.down('sm')]: {
+        width: '200px',
+        marginTop: '30px'
+    },
+}));
+
+
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
@@ -160,24 +172,30 @@ export default function ProfilePage() {
         </List>
       </Drawer>
       <Main open={open}>
-         <DrawerHeader />
-        <Box className="col w-100" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <Box sx={{ textAlign: 'center' }}>
-                <div className="row" style={{ color: 'black',  padding:'20px', borderRadius:'10px', position:'absolute',marginTop:'450px'}}>
-                    <img src={img1} alt='' style={{height:'auto', width:'300px'}}/>
-                    <p style={{marginTop:'-100px', marginLeft:'50px',color:'white', fontSize:'30px'}}>{user.username}</p>
-                    
-                </div> 
-                 <div style={{ color: 'black', height:'auto', width:'auto', borderRadius:'50px'}}>
-                    <img src={img2} alt="" style={{height:'auto', width:'100%' }}/>
-                    <hr className="divider" />
-                </div>
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: '5px' }}>
-                <RecipeReviewCard />
-            </Box>
+    <DrawerHeader />
+    <Box className="col w-100" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ textAlign: 'center' }}>
+            <div className="row" style={{ color: 'black', padding: '20px', borderRadius: '10px', position: 'absolute' }}>
+                <ImgResponsive src={img1} alt='' />
+                <p style={{ marginTop: '-100px', marginLeft: '50px', color: 'white', fontSize: '30px' }}>{user.username}</p>
+            </div>
+            <div style={{ color: 'black', height: 'auto', width: 'auto', borderRadius: '50px' }}>
+                <img src={img2} alt="" style={{ height: 'auto', width: '100%' }} />
+                <hr className="divider" />
+            </div>
         </Box>
-      </Main>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', gap: '5px' }}>
+            <RecipeReviewCard />
+        </Box>
+    </Box>
+</Main>
     </Box>
   );
+
+
+
+
 }
+
+
+
